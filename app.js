@@ -7,6 +7,15 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+// MongoDB configuration
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://mongo:27017');
+
+const Cat = mongoose.model('Cat', { name: String });
+
+const kitty = new Cat({ name: 'Zildjian' });
+kitty.save().then(() => console.log('meow'));
+
 var app = express();
 
 // view engine setup
@@ -38,4 +47,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+const { PORT = '3000' } = process.env;
+
+app.listen(PORT, () => {
+  console.log(`Magic happening on port :: ${PORT}`)
+});
