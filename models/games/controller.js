@@ -1,8 +1,8 @@
-const { GameModel: Game, winnerCombos } = './model';
+const { GameModel: Game, winnerCombos } = require('./model');
 
 // CRUD methods
 
-export async function createGame(player1, player2) {
+async function createGame(player1, player2) {
     try {
         const newGame = await Game.create({ player1, player2 });
         return newGame;
@@ -12,7 +12,7 @@ export async function createGame(player1, player2) {
     }
 }
 
-export async function getGame(_id) {
+async function getGame(_id) {
     try {
         const game = await Game.findOne({ _id });
         return game;
@@ -22,7 +22,7 @@ export async function getGame(_id) {
     }
 }
 
-export async function getGames(params = {}) {
+async function getGames(params = {}) {
     try {
         const games = await Game.find({ ...params });
         return games;
@@ -32,7 +32,7 @@ export async function getGames(params = {}) {
     }
 }
 
-export async function deleteGame(_id) {
+async function deleteGame(_id) {
     try {
         await Game.deleteMany({ _id })
         return true;
@@ -42,7 +42,7 @@ export async function deleteGame(_id) {
     }
 }
 
-export async function updateGame(_id, updateData = {}) {
+async function updateGame(_id, updateData = {}) {
     try {
         const game = await Game.findOne({ _id });
         Object.keys(updateData).forEach((key) => {
@@ -83,7 +83,7 @@ function areThereAWinner(game) {
 
 // RPC methods
 
-export async function addPlayToGame(_id, player1Play, player2Play) {
+async function addPlayToGame(_id, player1Play, player2Play) {
     try {
         const game = await Game.findOne({ _id });
         const winner = getWinnerPerPlay(player1Play, player2Play);
@@ -98,5 +98,13 @@ export async function addPlayToGame(_id, player1Play, player2Play) {
         console.error('Error got from Mongo - delete :: ', error);
         return error;
     }
+}
+
+module.exports = {
+    createGame,
+    getGame,
+    getGames,
+    updateGame,
+    addPlayToGame
 }
 

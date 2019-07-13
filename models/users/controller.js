@@ -1,9 +1,9 @@
-const { UserModel: User } = "./model";
+const { UserModel: User } = require("./model");
 const { body } = require("express-validator/check");
 
 // Validations
 
-exports.validate = method => {
+const validate = method => {
   switch (method) {
     case "createUser": {
       return [body("username", "username is required").exists()];
@@ -78,7 +78,7 @@ async function updateUser(_id, updateData = {}) {
   }
 }
 
-exports = {
+module.exports = {
   createUser,
   getUser,
   getUsers,
