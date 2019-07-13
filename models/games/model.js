@@ -36,5 +36,6 @@ const GameModel = mongoose.model('Game', GameSchema);
 
 module.exports = {
     GameModel,
-    GameSchema
+    GameSchema,
+    winnerCombos
 };
