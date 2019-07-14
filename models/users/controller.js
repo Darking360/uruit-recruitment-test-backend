@@ -1,6 +1,6 @@
 const { UserModel: User } = require("./model");
 const { check } = require("express-validator/check");
-const { validateMongooseType } = require('../games/controller');
+const { validateMongooseType } = require('../utils');
 
 // Validations
 
@@ -75,7 +75,7 @@ async function getUserByUsername(username) {
 
 async function getUsers(params = {}) {
   try {
-    const users = await User.find({ ...params });
+    const users = await User.find({ ...params }).populate('games');
     return users;
   } catch (error) {
     console.error("Error got from Mongo - get multiple :: ", error);
@@ -102,10 +102,24 @@ async function updateUser(_id, updateData = {}) {
     await user.save();
     return user;
   } catch (error) {
+    console.error("Error got from Mongo - update :: ", error);
+    return error;
+  }
+}
+
+async function addGameToUser(_id, gameId) {
+  try {
+    const user = await User.findOne({ _id });
+    user.games.push(gameId);
+    await user.save();
+    return user;
+  } catch (error) {
     console.error("Error got from Mongo - delete :: ", error);
     return error;
   }
 }
+
+
 
 module.exports = {
   createUser,
@@ -114,5 +128,6 @@ module.exports = {
   deleteUser,
   updateUser,
   getUserByUsername,
+  addGameToUser,
   validate
 };

@@ -1,13 +1,7 @@
 const { GameModel: Game, winnerCombos } = require('./model');
 const { check, body } = require("express-validator/check");
-const mongoose = require('mongoose');
-
-function validateMongooseType(value) {
-  if (!mongoose.Types.ObjectId.isValid(value)) {
-    throw new Error('ID is not valid');
-  }
-  return true
-}
+const { addGameToUser } = require('../users/controller');
+const { validateMongooseType } = require('../utils');
 
 // Validations
 
@@ -105,7 +99,7 @@ async function updateGame(_id, updateData = {}) {
         await game.save();
         return game;
     } catch (error) {
-        console.error('Error got from Mongo - delete :: ', error);
+        console.error('Error got from Mongo - update :: ', error);
         return { error };
     }
 }
@@ -156,10 +150,15 @@ async function addPlayToGame(_id, player1Play, player2Play) {
         if (winner) {
             game.winner = winner;
             game.save();
+            // Update players
+            // Update player 1
+            addGameToUser(game.player1, game._id);
+            // Update player 2
+            addGameToUser(game.player2, game._id);
         }
         return { game, winner };
     } catch (error) {
-        console.error('Error got from Mongo - delete :: ', error);
+        console.error('Error got from Mongo - play game :: ', error);
         return { error };
     }
 }
