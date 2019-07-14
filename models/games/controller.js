@@ -131,8 +131,6 @@ function areThereAWinner(game) {
             player2Wins++;
         }
     });
-    console.log(player1Wins);
-    console.log(player2Wins);
     if (player1Wins >= 3) { return 'player1' };
     if (player2Wins >= 3) { return 'player2' };
     return null;
