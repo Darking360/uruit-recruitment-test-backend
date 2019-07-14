@@ -1,7 +1,5 @@
 const { UserModel: User } = require("./model");
 const { check } = require("express-validator/check");
-const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
 const { validateMongooseType } = require('../games/controller');
 
 // Validations
@@ -9,24 +7,32 @@ const { validateMongooseType } = require('../games/controller');
 const validate = method => {
   switch (method) {
     case "createUser": {
-      return [check("username", "username is required").exists()];
+      return [
+        check("username", "username is required").exists(),
+        check("avatar", "avatar is required").exists()
+      ];
     }
     case "getUser": {
       return [
         check("_id", "_id is required").exists(),
-        body('passwordConfirmation').custom(validateMongooseType)
+        body('_id').custom(validateMongooseType)
+      ];
+    }
+    case "getByUsername": {
+      return [
+        check("username", "username is required").exists(),
       ];
     }
     case "deleteUser": {
       return [
         check("_id", "_id is required").exists(),
-        body('passwordConfirmation').custom(validateMongooseType)
+        body('_id').custom(validateMongooseType)
       ];
     }
     case "updateUser": {
       return [
         check("_id", "_id is required").exists(),
-        body('passwordConfirmation').custom(validateMongooseType)
+        body('_id').custom(validateMongooseType)
       ];
     }
   }
@@ -34,12 +40,12 @@ const validate = method => {
 
 // CRUD
 
-async function createUser(username) {
+async function createUser(username, avatar) {
   try {
     // If user already exists, retrieve and return that one
     const [oldUser] = await getUsers({ username });
     if (oldUser) { return oldUser };
-    const newUser = await User.create({ username });
+    const newUser = await User.create({ username, avatar });
     return newUser;
   } catch (error) {
     console.error("Error got from Mongo - creation :: ", error);
@@ -49,7 +55,17 @@ async function createUser(username) {
 
 async function getUser(_id) {
   try {
-    const user = await User.findOne({ _id: new ObjectId(_id) });
+    const user = await User.findOne({ _id });
+    return user;
+  } catch (error) {
+    console.error("Error got from Mongo - get single :: ", error);
+    return error;
+  }
+}
+
+async function getUserByUsername(username) {
+  try {
+    const user = await User.findOne({ username });
     return user;
   } catch (error) {
     console.error("Error got from Mongo - get single :: ", error);
@@ -69,7 +85,7 @@ async function getUsers(params = {}) {
 
 async function deleteUser(_id) {
   try {
-    await User.deleteMany({ _id: new ObjectId(_id) });
+    await User.deleteMany({ _id });
     return true;
   } catch (error) {
     console.error("Error got from Mongo - delete :: ", error);
@@ -79,7 +95,7 @@ async function deleteUser(_id) {
 
 async function updateUser(_id, updateData = {}) {
   try {
-    const user = await User.findOne({ _id: new ObjectId(_id) });
+    const user = await User.findOne({ _id });
     Object.keys(updateData).forEach(key => {
       user[key] = updateData[key];
     });
@@ -97,5 +113,6 @@ module.exports = {
   getUsers,
   deleteUser,
   updateUser,
+  getUserByUsername,
   validate
 };

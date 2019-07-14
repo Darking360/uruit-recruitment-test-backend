@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const { validationResult } = require('express-validator');
 const { getUser } = require('../models/users/controller');
+const { transformParamsToBody } = require('./utils');
 
 const {
   createGame,
@@ -12,13 +13,6 @@ const {
   addPlayToGame,
   validate
 } = require('../models/games/controller');
-
-function transformParamsToBody(req, res, next) {
-  Object.keys(req.params).forEach((key) => {
-    req.body[key] = req.params[key];
-  });
-  next();
-}
 
 // CRUD
 

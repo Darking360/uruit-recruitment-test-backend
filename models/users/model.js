@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema({
     username: { type: String, required: true, index: true, unique: true },
+    avatar: { type: String, required: true },
     games: [{ type: Schema.Types.ObjectId, ref: 'Game' }]
 }, {timestamps: true});
 

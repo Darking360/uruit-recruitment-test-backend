@@ -122,7 +122,8 @@ function getWinnerPerPlay(player1Play, player2Play) {
 }
 
 function areThereAWinner(game) {
-    let player1Wins, player2Wins = 0;
+    let player1Wins = 0;
+    let player2Wins = 0;
     game.plays.forEach((play) => {
         if (play.winner === 'player1') {
             player1Wins++;
@@ -130,6 +131,8 @@ function areThereAWinner(game) {
             player2Wins++;
         }
     });
+    console.log(player1Wins);
+    console.log(player2Wins);
     if (player1Wins >= 3) { return 'player1' };
     if (player2Wins >= 3) { return 'player2' };
     return null;
