@@ -48,7 +48,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.send('error');
+  res.send('Resource not found');
 });
 
 const { PORT = '3000' } = process.env;
