@@ -17,7 +17,7 @@ let server = require('../../app');
 let should = chai.should();
 
 function throwError(instance) {
-    if (instance) {
+    if (instance && !instance.err) {
         return instance;
     } else {
         throw new Error(instance.error);
@@ -94,6 +94,22 @@ describe("User's controllers", function() {
                 return true;
             } else {
                 throw new Error("Error updating user");
+            }
+        }
+    });
+
+    it("adds a game to user's games", async () => {
+        const user = {
+            username: 'miguel',
+            avatar: 'some'
+        };
+        const gameId = "5d2bd7e78d9b260631473f84";
+        const createdUser = await createUser(user.username, user.avatar);
+        if (throwError(createdUser)) {
+            const gotUser = await getUser(createdUser._id);
+            if (throwError(gotUser)) {
+                const added = await addGameToUser(gotUser._id, gameId);
+                return throwError(added);
             }
         }
     });
