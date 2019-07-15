@@ -1,10 +1,4 @@
 let mongoose = require("mongoose");
-if (process.env.MONGODB_URI) {
-  // Check for local usage later
-  mongoose.connect(process.env.MONGODB_URI);
-} else {
-  mongoose.connect(`mongodb://mongo:27017`);
-}
 let {
   createUser,
   getUser,
