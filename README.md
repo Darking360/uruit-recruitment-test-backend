@@ -1,10 +1,10 @@
-# UruIT - Game Of Drones - API :fire:
+# UruIT - Game Of Drones - API 🔥
 
-This project is the backend part of the 2 parts of the test, the other repo contains all the App related logic, it can be found here: [UruIT - Game of Drones - App](https://lickaca.comp).
+This project is the backend part of the 2 parts of the test, the other repo contains all the App related logic, it can be found here: [UruIT - Game of Drones - App](https://github.com/Darking360/uruit-recruitment-test-frontend).
 
-## Instructions to run
+## Instructions to run 🐋
 
-In this house we believe in our god Docker :whale: so all the project is easible setup with it, so follow this simple steps:
+In this house we believe in our god Docker 🐋 so all the project is easy to setup with it, so follow this simple steps:
 
 - Clone the project
 - Go to the project's directory
@@ -22,9 +22,9 @@ sudo docker-compose up
 
 And that's it, you should get an app running on port 3001, and accesible by going into: [http://localhost:3000](http://localhost:3000).
 
-## But I don't like docker :cry:
+## But I don't like docker 😭
 
-It's important to note here that you need to be running mongoDB in your local machine if you're going to take this path (please, user docker :whale:). You need to export an environment variable containing the complete URI to your mongoDB install on your machine like:
+It's important to note here that you need to be running mongoDB in your local machine if you're going to take this path (please, user docker 🐋). You need to export an environment variable containing the complete URI to your mongoDB install on your machine like:
 
 ```
 export MONGO_URI=mongodb://localhost:27017
@@ -39,9 +39,9 @@ After that, we got you covered, if you don't want to use it you can install all 
 - Run npm install
 - Run npm start
 
-And that's it :bulb:
+And that's it 💡
 
-## Where are the tests? :eyes:
+## Where are the tests? 👀
 
 You can run the tests wit docker or npm by itself running:
 
@@ -61,10 +61,16 @@ Or
 npm run test
 ```
 
-Depending on your case :eyes:
+Depending on your case 👀
 
 ## Project dependencies and versions
 
 Besides the project `package.json` dependencies, we have this dependencies if you want to take a look:
 
-// Table here
+| Technology        | Version            |
+| ------------- |:-------------:|
+| node      | ^11.10.0 |
+| npm      | ^6.7.0      |
+| docker | 18.03.0-ce, build 0520e24302      |
+| docker-compose | version 1.20.1, build unknown      |
+| mongoDB | ^4.0.0      |
