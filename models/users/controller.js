@@ -49,7 +49,7 @@ async function createUser(username, avatar) {
     return newUser;
   } catch (error) {
     console.error("Error got from Mongo - creation :: ", error);
-    return error;
+    return { err: true, error }
   }
 }
 
@@ -59,7 +59,7 @@ async function getUser(_id) {
     return user;
   } catch (error) {
     console.error("Error got from Mongo - get single :: ", error);
-    return error;
+    return { err: true, error }
   }
 }
 
@@ -69,7 +69,7 @@ async function getUserByUsername(username) {
     return user;
   } catch (error) {
     console.error("Error got from Mongo - get single :: ", error);
-    return error;
+    return { err: true, error }
   }
 }
 
@@ -79,17 +79,17 @@ async function getUsers(params = {}) {
     return users;
   } catch (error) {
     console.error("Error got from Mongo - get multiple :: ", error);
-    return error;
+    return { err: true, error }
   }
 }
 
-async function deleteUser(_id) {
+async function deleteUser(_id, optional = {}) {
   try {
-    await User.deleteMany({ _id });
+    await User.deleteMany({ ...optional });
     return true;
   } catch (error) {
     console.error("Error got from Mongo - delete :: ", error);
-    return error;
+    return { err: true, error }
   }
 }
 
@@ -103,7 +103,7 @@ async function updateUser(_id, updateData = {}) {
     return user;
   } catch (error) {
     console.error("Error got from Mongo - update :: ", error);
-    return error;
+    return { err: true, error }
   }
 }
 
@@ -115,7 +115,7 @@ async function addGameToUser(_id, gameId) {
     return user;
   } catch (error) {
     console.error("Error got from Mongo - delete :: ", error);
-    return error;
+    return { err: true, error }
   }
 }
 
