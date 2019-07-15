@@ -14,7 +14,13 @@ const mongoose = require('mongoose');
 
 if (process.env.MONGODB_URI) {
   // Check for local usage later
-  mongoose.connect(process.env.MONGODB_URI);
+  if (process.env.NODE_ENV !== 'test') {
+    mongoose.connect(process.env.MONGODB_URI);
+  } else {
+    mongoose.connect(`${process.env.MONGODB_URI}/test`);
+  }
+} else if (process.env.NODE_ENV === 'test') {
+  mongoose.connect(`mongodb://mongo:27017/test`);
 } else {
   mongoose.connect(`mongodb://mongo:27017`);
 }
