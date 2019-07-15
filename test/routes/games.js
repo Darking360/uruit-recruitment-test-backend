@@ -9,6 +9,7 @@ let {
 
 //Require the dev-dependencies
 let chai = require('chai');
+const expect = chai.expect;
 let chaiHttp = require('chai-http');
 let server = require('../../app');
 let should = chai.should();
@@ -20,6 +21,8 @@ function throwError(instance) {
         throw new Error(instance.error);
     }
 }
+
+chai.use(chaiHttp);
 
 describe("Game's controllers", function() {
   
@@ -130,5 +133,223 @@ describe("Game's controllers", function() {
           }
       }
     });
+
+});
+
+describe("Game's routes", function() {
+  it("/GET :: gets all games", done => {
+    chai
+      .request(server)
+      .get("/games")
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a("array");
+        done();
+      });
+  });
+
+  it("/POST :: creates a new game", done => {
+    const newGame = {
+      player1: '5d2bdcc54d7e9e6d5d23a9d6',
+      player2: '5d2bdcc54d7e9e6d5d23a9d7'
+    };
+    chai
+      .request(server)
+      .post("/games")
+      .send(newGame)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        done();
+      });
+  });
+
+  it("/POST :: error creating a new game with no player 1", done => {
+    const newGame = {
+      player2: '5d2bdcc54d7e9e6d5d23a9d7'
+    };
+    chai
+      .request(server)
+      .post("/games")
+      .send(newGame)
+      .end((err, res) => {
+        res.should.have.status(422);
+        res.body.should.be.a("object");
+        expect(res.body.errors).to.satisfy(function(errors) {
+          return errors.length >= 0;
+        });
+        done();
+      });
+  });
+
+  it("/POST :: error creating a new game with no player 2", done => {
+    const newGame = {
+      player1: '5d2bdcc54d7e9e6d5d23a9d6'
+    };
+    chai
+      .request(server)
+      .post("/games")
+      .send(newGame)
+      .end((err, res) => {
+        res.should.have.status(422);
+        res.body.should.be.a("object");
+        expect(res.body.errors).to.satisfy(function(errors) {
+          return errors.length >= 0;
+        });
+        done();
+      });
+  });
+
+  it("/POST :: error creating a new game with wrong objectIDs", done => {
+    const newGame = {
+      player1: '5d2bdcc54d7e',
+      player2: '5d2bdcc54d7e9e623a9d7'
+    };
+    chai
+      .request(server)
+      .post("/games")
+      .send(newGame)
+      .end((err, res) => {
+        res.should.have.status(422);
+        res.body.should.be.a("object");
+        expect(res.body.errors).to.satisfy(function(errors) {
+          return errors.length >= 0;
+        });
+        done();
+      });
+  });
+
+  it("/POST :: adds a play to a game", done => {
+    const newPlay = {
+      player1Play: 1,
+      player2Play: 2
+    };
+    const newGame = {
+      player1: '5d2bdcc54d7e9e6d5d23a9d6',
+      player2: '5d2bdcc54d7e9e6d5d23a9d7'
+    };
+    chai
+      .request(server)
+      .post("/games")
+      .send(newGame)
+      .end((err, res) => {
+        // Game created, pull gameId to subsquent requests
+        const { body: { _id: gameId } } = res;
+        chai
+          .request(server)
+          .post(`/games/add_play/${gameId}`)
+          .send(newPlay)
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a("object");
+            done();
+          });
+      });
+  });
+
+  it("/POST :: error adding play to game :: no player 1 play", done => {
+    const newPlay = {
+      player2Play: 2
+    };
+    const newGame = {
+      player1: '5d2bdcc54d7e9e6d5d23a9d6',
+      player2: '5d2bdcc54d7e9e6d5d23a9d7'
+    };
+    chai
+      .request(server)
+      .post("/games")
+      .send(newGame)
+      .end((err, res) => {
+        // Game created, pull gameId to subsquent requests
+        const { body: { _id: gameId } } = res;
+        chai
+          .request(server)
+          .post(`/games/add_play/${gameId}`)
+          .send(newPlay)
+          .end((err, res) => {
+            res.should.have.status(422);
+            res.body.should.be.a("object");
+            expect(res.body.errors).to.satisfy(function(errors) {
+              return errors.length >= 0;
+            });
+            done();
+          });
+      });
+  });
+
+  it("/POST :: error adding play to game :: no player 2 play", done => {
+    const newPlay = {
+      player1Play: 2
+    };
+    const newGame = {
+      player1: '5d2bdcc54d7e9e6d5d23a9d6',
+      player2: '5d2bdcc54d7e9e6d5d23a9d7'
+    };
+    chai
+      .request(server)
+      .post("/games")
+      .send(newGame)
+      .end((err, res) => {
+        // Game created, pull gameId to subsquent requests
+        const { body: { _id: gameId } } = res;
+        chai
+          .request(server)
+          .post(`/games/add_play/${gameId}`)
+          .send(newPlay)
+          .end((err, res) => {
+            res.should.have.status(422);
+            res.body.should.be.a("object");
+            expect(res.body.errors).to.satisfy(function(errors) {
+              return errors.length >= 0;
+            });
+            done();
+          });
+      });
+  });
+
+  it("/POST :: adds a play to a game until winner is got at third play", done => {
+    const newPlay = {
+      player1Play: 1,
+      player2Play: 2
+    };
+    const newGame = {
+      player1: '5d2bdcc54d7e9e6d5d23a9d6',
+      player2: '5d2bdcc54d7e9e6d5d23a9d7'
+    };
+    chai
+      .request(server)
+      .post("/games")
+      .send(newGame)
+      .end((err, res) => {
+        // Game created, pull gameId to subsquent requests
+        const { body: { _id: gameId } } = res;
+        chai
+          .request(server)
+          .post(`/games/add_play/${gameId}`)
+          .send(newPlay)
+          .end((err, res) => {
+            chai
+            .request(server)
+            .post(`/games/add_play/${gameId}`)
+            .send(newPlay)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a("object");
+              chai
+                .request(server)
+                .post(`/games/add_play/${gameId}`)
+                .send(newPlay)
+                .end((err, res) => {
+                  res.should.have.status(200);
+                  res.body.should.be.a("object");
+                  expect(res.body).to.satisfy(function(body) {
+                    return body.winner && body.winner === 'player2';
+                  });
+                  done();
+                });
+            });
+          });
+      });
+  });
 
 });
