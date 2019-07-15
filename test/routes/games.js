@@ -125,7 +125,6 @@ describe("Game's controllers", function() {
           await addPlayToGame(createdGame._id, 1, 2);
           await addPlayToGame(createdGame._id, 1, 2);
           const addedPlay = await addPlayToGame(createdGame._id, 1, 2);
-          console.log(addedPlay)
           if (throwError(addedPlay) && addedPlay.winner && addedPlay.winner === 'player2') {
               return true;
           } else {
