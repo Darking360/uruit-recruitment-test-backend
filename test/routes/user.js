@@ -114,4 +114,11 @@ describe("User's controllers", function() {
         }
     });
 
+    it("adds a game to user's games", async () => {
+        const username = 'miguel';
+       // User created! Now retrieve
+       const gotUser = await getUserByUsername(username);
+       return throwError(gotUser);
+    });
+
 });
