@@ -12,12 +12,12 @@ var gamesRouter = require('./routes/games');
 // MongoDB configuration
 const mongoose = require('mongoose');
 
-if (process.env.NODE_ENV === 'development')
-  mongoose.connect(`mongodb://${process.env.MONGO_DB_URI || 'mongo'}:27017`);
-if (process.env.NODE_END === 'test')
-  mongoose.connect(`mongodb://${process.env.MONGO_DB_URI || 'mongo'}:27017/test`);
-if (process.env.NODE_ENV === 'production')
-  mongoose.connect(`mongodb://${process.env.MONGO_DB_URI}:27017`);
+if (process.env.MONGODB_URI) {
+  // Check for local usage later
+  mongoose.connect(process.env.MONGODB_URI);
+} else {
+  mongoose.connect(`mongodb://mongo:27017`);
+}
 
 var app = express();
 
