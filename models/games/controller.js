@@ -56,7 +56,7 @@ async function createGame(player1, player2) {
         return newGame;
     } catch (error) {
         console.error('Error got from Mongo - creation :: ', error);
-        return { error };
+        return { err: true, error };
     }
 }
 
@@ -66,7 +66,7 @@ async function getGame(_id) {
         return game;
     } catch (error) {
         console.error('Error got from Mongo - get single :: ', error);
-        return { error };
+        return { err: true, error };
     }
 }
 
@@ -76,7 +76,7 @@ async function getGames(params = {}) {
         return games;
     } catch (error) {
         console.error('Error got from Mongo - get multiple :: ', error);
-        return { error };
+        return { err: true, error };
     }
 }
 
@@ -86,7 +86,7 @@ async function deleteGame(_id) {
         return true;
     } catch (error) {
         console.error('Error got from Mongo - delete :: ', error);
-        return { error };
+        return { err: true, error };
     }
 }
 
@@ -99,8 +99,8 @@ async function updateGame(_id, updateData = {}) {
         await game.save();
         return game;
     } catch (error) {
-        console.error('Error got from Mongo - update :: ', error);
-        return { error };
+        console.error('Error got from Mongo - update GAME :: ', error);
+        return { err: true, error };
     }
 }
 
@@ -159,7 +159,7 @@ async function addPlayToGame(_id, player1Play, player2Play) {
         return { game, winner };
     } catch (error) {
         console.error('Error got from Mongo - play game :: ', error);
-        return { error };
+        return { err: true, error };
     }
 }
 
@@ -168,6 +168,7 @@ module.exports = {
     getGame,
     getGames,
     updateGame,
+    deleteGame,
     addPlayToGame,
     validate
 }

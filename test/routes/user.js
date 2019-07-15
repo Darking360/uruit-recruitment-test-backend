@@ -98,6 +98,23 @@ describe("User's controllers", function() {
         }
     });
 
+    it("gives error on already used username for update", async () => {
+        const user = {
+            username: 'toupdate',
+            avatar: 'some'
+        };
+        const createdUser = await createUser(user.username, user.avatar);
+        if (throwError(createdUser)) {
+            // User created! Now retrieve
+            const gotUser = await updateUser(createdUser._id, { username: 'randomname' });
+            if (gotUser.err) {
+                return true;
+            } else {
+                throw new Error("Error updating user");
+            }
+        }
+    });
+
     it("adds a game to user's games", async () => {
         const user = {
             username: 'miguel',
@@ -114,7 +131,7 @@ describe("User's controllers", function() {
         }
     });
 
-    it("adds a game to user's games", async () => {
+    it("gets user by username", async () => {
         const username = 'miguel';
        // User created! Now retrieve
        const gotUser = await getUserByUsername(username);
